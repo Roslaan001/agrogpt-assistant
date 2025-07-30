@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AgroGPT – Local AI Assistant</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-green-50 flex items-center justify-center min-h-screen">
+
+  <div class="bg-white p-8 rounded-2xl shadow-lg max-w-xl w-full text-center">
+    <h1 class="text-3xl font-bold text-green-700 mb-2">🌾 AgroGPT</h1>
+    <p class="text-gray-600 mb-6">An AI assistant for Nigerian farmers</p>
+
+    <form method="POST" class="flex flex-col gap-4">
+      <input
+        type="text"
+        name="crop"
+        placeholder="e.g. Tomatoes, Cassava, Plantain"
+        required
+        class="border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-green-400"
+      />
+      <button
+        type="submit"
+        class="bg-green-600 text-white py-3 px-6 rounded-lg hover:bg-green-700 transition duration-200"
+      >
+        Get AgroGPT Advice
+      </button>
+    </form>
+
+    {% if advice %}
+      <div class="mt-6 text-left">
+        <h2 class="text-lg font-semibold text-green-700 mb-2">📋 AgroGPT Response:</h2>
+        <div class="bg-gray-100 p-4 rounded-lg text-sm text-gray-800 leading-snug space-y-1">
+          {% for line in advice.split('\n') %}
+            {% set trimmed = line.strip() %}
+            {% if trimmed %}
+              {% if trimmed.startswith("❌") %}
+                <p class="text-red-600 font-semibold">{{ trimmed }}</p>
+              {% elif trimmed.startswith("✅") %}
+                <p class="text-green-700 font-semibold">{{ trimmed }}</p>
+              {% elif trimmed and trimmed[0].isdigit() and '.' in trimmed[:3] and ':' in trimmed %}
+                {% set parts = trimmed.split(':', 1) %}
+                <p><span class="text-red-700 font-semibold">{{ parts[0] }}:</span> {{ parts[1].strip() }}</p>
+              {% else %}
+                <p class="ml-4">{{ trimmed }}</p>
+              {% endif %}
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+  </div>
+
+</body>
+</html>
