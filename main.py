@@ -1,4 +1,4 @@
-# app.py
+# .py
 from flask import Flask, render_template, request
 from gpt_prompts import get_agro_advice
 
